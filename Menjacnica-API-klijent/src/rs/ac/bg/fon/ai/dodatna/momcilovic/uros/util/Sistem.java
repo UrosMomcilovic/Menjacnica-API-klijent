@@ -23,4 +23,19 @@ public class Sistem {
 		zemlje = MenjacnicaCommunication.vratiZemlje();
 	}
 	
+	public static double kurs(String from, String to){
+		String idFrom = "";
+		String idTo = "";
+		
+		for(Zemlja zemlja : zemlje){
+			if(zemlja.getName().equals(from)){
+				idFrom = zemlja.getId();
+			}
+			if(zemlja.getName().equals(to)){
+				idTo = zemlja.getId();
+			}
+		}
+		
+		return MenjacnicaCommunication.vratiOdnosDveValute(idFrom, idTo);
+	}
 }

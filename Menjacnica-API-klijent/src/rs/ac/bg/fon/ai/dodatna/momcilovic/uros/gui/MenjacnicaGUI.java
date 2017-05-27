@@ -10,9 +10,13 @@ import javax.swing.border.EmptyBorder;
 import rs.ac.bg.fon.ai.dodatna.momcilovic.uros.util.Sistem;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class MenjacnicaGUI extends JFrame {
 
@@ -25,6 +29,7 @@ public class MenjacnicaGUI extends JFrame {
 	private JTextField textFieldU;
 	private JComboBox comboBoxIz;
 	private JComboBox comboBoxU;
+	private JButton btnKonvertuj;
 	
 	
 	/**
@@ -68,6 +73,7 @@ public class MenjacnicaGUI extends JFrame {
 		contentPane.add(getTextFieldU());
 		contentPane.add(getComboBoxIz());
 		contentPane.add(getComboBoxU());
+		contentPane.add(getBtnKonvertuj());
 	}
 	private JLabel getLblIzValuteZemlje() {
 		if (lblIzValuteZemlje == null) {
@@ -108,6 +114,7 @@ public class MenjacnicaGUI extends JFrame {
 	private JTextField getTextFieldU() {
 		if (textFieldU == null) {
 			textFieldU = new JTextField();
+			textFieldU.setEditable(false);
 			textFieldU.setBounds(255, 168, 116, 22);
 			textFieldU.setColumns(10);
 		}
@@ -129,4 +136,35 @@ public class MenjacnicaGUI extends JFrame {
 		}
 		return comboBoxU;
 	}
+	
+	private JButton getBtnKonvertuj() {
+		if (btnKonvertuj == null) {
+			btnKonvertuj = new JButton("Konvertuj");
+			btnKonvertuj.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					izracunajKurs();
+				}
+			});
+			btnKonvertuj.setBounds(152, 215, 97, 25);
+		}
+		return btnKonvertuj;
+	}
+	
+	private void izracunajKurs(){ 
+		double iznos = Double.parseDouble(textFieldIz.getText());
+		
+		if(iznos <= 0){
+			JOptionPane.showMessageDialog(contentPane, "Nepravilno unet iznos!", "Greska!", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		double kurs = Sistem.kurs(comboBoxIz.getSelectedItem().toString(), comboBoxU.getSelectedItem().toString());
+		
+		if(kurs <= 0){
+			JOptionPane.showMessageDialog(contentPane, "Ne postoji kurs za unete drzave!", "Greska!",JOptionPane.ERROR_MESSAGE);
+		}
+		
+		
+		textFieldU.setText("" + iznos * kurs);
+	}
+	
 }

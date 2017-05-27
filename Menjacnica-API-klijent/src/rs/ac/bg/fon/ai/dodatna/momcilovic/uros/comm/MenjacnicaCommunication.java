@@ -74,6 +74,32 @@ public class MenjacnicaCommunication {
 		return response.toString();
 
 	}
+	
+	public static double vratiOdnosDveValute(String from, String to){
+		String url = "http://free.currencyconverterapi.com/api/v3/convert?q=" + from + "_" + to;
+		
+		try {
+			String output = sendGet(url);
+			Gson gson = new GsonBuilder().create();
+			
+			JsonObject j = gson.fromJson(output, JsonObject.class);
+			int count = (((JsonObject) j.get("query")).get("count")).getAsInt();
+			
+			if(count == 0){
+				return 0;
+			}
+			
+			JsonObject kursJson = (JsonObject) (((JsonObject) j.get("results")).get(from + "_" + to));
+			double kurs =  kursJson.get("val").getAsDouble();
+			
+			return kurs;
+		} catch (IOException e) {
+			return 0;
+		}
+		
+		
+		
+	}
 
 	
 	
