@@ -2,21 +2,27 @@ package rs.ac.bg.fon.ai.dodatna.momcilovic.uros.comm;
 
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.net.ssl.HttpsURLConnection;
+
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import rs.ac.bg.fon.ai.dodatna.momcilovic.uros.domain.Konverzija;
 import rs.ac.bg.fon.ai.dodatna.momcilovic.uros.domain.Zemlja;
 
 public class MenjacnicaCommunication {
@@ -100,8 +106,25 @@ public class MenjacnicaCommunication {
 		
 		
 	}
+	
+	public static void upisiKonverziju(Konverzija k) throws IOException{
+		
+		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+		JsonObject konverzijaJson = new JsonObject();
+		konverzijaJson.addProperty("datumVreme", formater.format(k.getDatumVreme()));
+		konverzijaJson.addProperty("izValuta", k.getIzValuta());
+		konverzijaJson.addProperty("uValuta", k.getuValuta());
+		konverzijaJson.addProperty("kurs", k.getKurs());
+		
+		
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("data/log.json", true)));
 
-	
-	
-	
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		String konverzijeString = gson.toJson(konverzijaJson);
+
+		out.println(konverzijeString + ",");
+		out.close();
+		
+	}
+
 }

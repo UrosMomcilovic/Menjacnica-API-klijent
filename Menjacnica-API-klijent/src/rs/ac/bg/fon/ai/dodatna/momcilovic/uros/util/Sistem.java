@@ -1,8 +1,10 @@
 package rs.ac.bg.fon.ai.dodatna.momcilovic.uros.util;
 
+import java.io.IOException;
 import java.util.LinkedList;
 
 import rs.ac.bg.fon.ai.dodatna.momcilovic.uros.comm.MenjacnicaCommunication;
+import rs.ac.bg.fon.ai.dodatna.momcilovic.uros.domain.Konverzija;
 import rs.ac.bg.fon.ai.dodatna.momcilovic.uros.domain.Zemlja;
 
 public class Sistem {
@@ -38,4 +40,29 @@ public class Sistem {
 		
 		return MenjacnicaCommunication.vratiOdnosDveValute(idFrom, idTo);
 	}
+	
+	public static void konverzija(String from, String to, double kurs){
+		String idFrom = "";
+		String idTo = "";
+		
+		for(Zemlja zemlja : zemlje){
+			if(zemlja.getName().equals(from)){
+				idFrom = zemlja.getId();
+			}
+			if(zemlja.getName().equals(to)){
+				idTo = zemlja.getId();
+			}
+		}
+		
+		Konverzija k = new Konverzija(idFrom, idTo, kurs);
+		
+		try {
+			MenjacnicaCommunication.upisiKonverziju(k);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
 }

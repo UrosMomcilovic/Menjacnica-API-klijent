@@ -165,6 +165,8 @@ public class MenjacnicaGUI extends JFrame {
 		
 		
 		textFieldU.setText("" + iznos * kurs);
+		
+		Sistem.konverzija(comboBoxIz.getSelectedItem().toString(), comboBoxU.getSelectedItem().toString(), kurs);
 	}
 	
 }
