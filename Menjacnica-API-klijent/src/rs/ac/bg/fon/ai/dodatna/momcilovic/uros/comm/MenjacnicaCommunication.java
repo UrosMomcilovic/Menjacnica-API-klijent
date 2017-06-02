@@ -3,6 +3,8 @@ package rs.ac.bg.fon.ai.dodatna.momcilovic.uros.comm;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -107,24 +109,71 @@ public class MenjacnicaCommunication {
 		
 	}
 	
-	public static void upisiKonverziju(Konverzija k) throws IOException{
+	public static void upisiKonverzije(LinkedList<Konverzija> konverzije) throws IOException{
 		
-		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-		JsonObject konverzijaJson = new JsonObject();
-		konverzijaJson.addProperty("datumVreme", formater.format(k.getDatumVreme()));
-		konverzijaJson.addProperty("izValuta", k.getIzValuta());
-		konverzijaJson.addProperty("uValuta", k.getuValuta());
-		konverzijaJson.addProperty("kurs", k.getKurs());
+		JsonArray konverzijeJson = pretvoriUJson(konverzije);
 		
-		
-		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("data/log.json", true)));
+		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("data/log.json")));
 
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
-		String konverzijeString = gson.toJson(konverzijaJson);
+		String konverzijeString = gson.toJson(konverzijeJson);
 
-		out.println(konverzijeString + ",");
+		out.println(konverzijeString);
 		out.close();
+	}
+	
+	
+	
+	private static JsonArray pretvoriUJson(LinkedList<Konverzija> konverzije){
+		SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 		
+		JsonArray niz = ucitajIzFajla();
+		if(niz == null){
+			niz = new JsonArray();
+		}
+		
+		for (Konverzija k : konverzije) {
+			JsonObject konverzijaJson = new JsonObject();
+			konverzijaJson.addProperty("datumVreme", formater.format(k.getDatumVreme()));
+			konverzijaJson.addProperty("izValuta", k.getIzValuta());
+			konverzijaJson.addProperty("uValuta", k.getuValuta());
+			konverzijaJson.addProperty("kurs", k.getKurs());
+			
+			niz.add(konverzijaJson);
+		}
+		
+		return niz;
+	}
+	
+	private static JsonArray ucitajIzFajla() {
+		JsonArray jsonNiz;
+		String output = "";
+		Gson gson = new GsonBuilder().create();
+
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("data/log.json"));
+			
+			while (true) {
+				String a = br.readLine();
+				if (a == null) {
+					break;
+				}
+				output += a;
+			}
+			
+			br.close();
+			jsonNiz = gson.fromJson(output, JsonArray.class);
+			
+			return jsonNiz;
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

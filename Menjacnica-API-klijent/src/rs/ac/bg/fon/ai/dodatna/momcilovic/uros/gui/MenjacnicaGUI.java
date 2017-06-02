@@ -16,6 +16,8 @@ import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 
 public class MenjacnicaGUI extends JFrame {
@@ -42,6 +44,14 @@ public class MenjacnicaGUI extends JFrame {
 					Sistem.ucitajUlistu();
 					MenjacnicaGUI frame = new MenjacnicaGUI();
 					frame.setVisible(true);
+					
+					frame.addWindowListener(new WindowAdapter() {
+						@Override
+						public void windowClosing(WindowEvent e) {
+							Sistem.upisiKonUFajl();
+							System.exit(0);
+						}
+					});
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -59,7 +69,7 @@ public class MenjacnicaGUI extends JFrame {
 	}
 	private void initGUI() {
 		setTitle("Menjacnica");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -168,5 +178,7 @@ public class MenjacnicaGUI extends JFrame {
 		
 		Sistem.konverzija(comboBoxIz.getSelectedItem().toString(), comboBoxU.getSelectedItem().toString(), kurs);
 	}
+	
+	
 	
 }

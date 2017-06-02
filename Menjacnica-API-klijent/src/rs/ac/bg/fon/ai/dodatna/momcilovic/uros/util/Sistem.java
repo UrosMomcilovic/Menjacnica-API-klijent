@@ -10,6 +10,7 @@ import rs.ac.bg.fon.ai.dodatna.momcilovic.uros.domain.Zemlja;
 public class Sistem {
 	
 	private static LinkedList<Zemlja> zemlje = new LinkedList<Zemlja>();
+	private static LinkedList<Konverzija> konverzije = new LinkedList<>();
 	
 	public static String[] izvuciImenaZemalja() {
 		String[] imena = new String[zemlje.size()];
@@ -56,8 +57,14 @@ public class Sistem {
 		
 		Konverzija k = new Konverzija(idFrom, idTo, kurs);
 		
+		konverzije.add(k);
+	}
+	
+	public static void upisiKonUFajl(){
 		try {
-			MenjacnicaCommunication.upisiKonverziju(k);
+			if(konverzije.size() > 0){
+				MenjacnicaCommunication.upisiKonverzije(konverzije);
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
